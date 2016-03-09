@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+	<!--Velocity -->
+	<!-- <beans:bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" 
+		id="urlMapping"> <beans:property name="mappings"> <beans:props> <beans:prop 
+		key="friendList">FriendListController</beans:prop> </beans:props> </beans:property> 
+		</beans:bean> <beans:bean class="org.springframework.web.servlet.view.velocity.VelocityConfigurer" 
+		id="velocityConfigurer"> <beans:property name="res" value="" /> </beans:bean> -->
+
+
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="order" value="3" />
+	</beans:bean>
+
+
+	<!-- JDBC and Hibernate mapping for spring security -->
+
+	<context:component-scan base-package="com.neu.css" />
+	<context:property-placeholder location="/resources/database/database.properties" />
+
+	<beans:bean
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		id="dataSource">
+		<beans:property name="driverClassName" value="${database.driver}" />
+		<beans:property name="url" value="${database.url}" />
+		<beans:property name="username" value="${database.user}" />
+		<beans:property name="password" value="${database.password}" />
+	</beans:bean>
+
+	<beans:bean
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" id="sessionFactory">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="annotatedClasses">
+			<beans:list>
+				<beans:value>com.neu.edu.Model.CoupleSignUp</beans:value>
+				<beans:value>com.neu.edu.Model.CoupleInfo</beans:value>
+				<beans:value>com.neu.edu.Model.Person</beans:value>
+				<beans:value>com.neu.edu.Model.Role</beans:value>
+				<beans:value>com.neu.edu.Model.Activities</beans:value>
+				<beans:value>com.neu.edu.Model.Inbox</beans:value>
+				<beans:value>com.neu.edu.Model.FriendZone</beans:value>
+				<beans:value>com.neu.edu.Model.CoupleRememberToken</beans:value>
+			</beans:list>
+		</beans:property>
+		<beans:property name="hibernateProperties">
+			<beans:props>
+				<beans:prop key="hibernate.dialect">${hibernate.dialect}</beans:prop>
+				<beans:prop key="hibernate.show_sql">${hibernate.show_sql}</beans:prop>
+				<beans:prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+	<beans:bean
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		id="hibernateTransactionManager">
+		<beans:property name="sessionFactory" ref="sessionFactory"></beans:property>
+	</beans:bean>
+
+
+
+	<!-- <beans:bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver"> 
+		<beans:property name="prefix" value="" /> <beans:property name="suffix" value=".vm" 
+		/> <beans:property name="order" value="1"></beans:property> </beans:bean> 
+		<beans:bean id="ftlviewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"> 
+		<beans:property name="prefix" value="" /> <beans:property name="suffix" value=".ftl" 
+		/> <beans:property name="order" value="2"></beans:property> </beans:bean> -->
+
+
+	<!-- Velocity Configurer <beans:bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer"> 
+		<beans:property name="" value="/WEB-INF/template/" /> </beans:bean> -->
+
+	<!-- free marker configurer <beans:bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"> 
+		<beans:property name="" value="/WEB-INF/ftl/" /> </beans:bean> -->
+
+
+
+	<!-- Multipart Resolver -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- setting maximum upload size -->
+		<beans:property name="maxUploadSize" value="10000000" />
+	</beans:bean>
+
+
+
+	<context:component-scan base-package="com.neu.edu" />
+	<!-- <beans:import resource="flow-config.xml"/> -->
+
+</beans:beans>
